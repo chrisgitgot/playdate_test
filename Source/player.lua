@@ -16,6 +16,8 @@ function Player:init(x,y)
     self.angle = 0
     bx = self.x + 10
     by = self.y
+    spawnX = self.x
+    spawnY = self.y
 end
 
 function Player:update()

@@ -1,24 +1,31 @@
-local pd <const> = playdate
-local gfx <const> = pd.graphics
+local gfx = playdate.graphics
 
-class('Bullet').extends(gfx.sprite)
+Bullet = {}
+Bullet.__index = Bullet
 
-function Bullet:init(x,y,r,speed)
-    local bulletSize = 4
-    local bulletImg = gfx.image.new(bulletSize * 2, bulletSize * 2)
-    gfx.pushContext(bulletImg)
-        gfx.drawCircleAtPoint(bulletSize,bulletSize,bulletSize)
-    gfx.popContext()
-    self:setImage(bulletImg)
+function Bullet:new()
+	local self = playdate.graphics.sprite:new()
+	
+	self:setSize(3, 3)
+	self:setCollideRect(0, 0, 3, 3)
+	
+	function self:setVelocity(dx, dy, da)
+		self.dx = dx
+		self.dy = dy
+	end
+	
+	function self:update()
+		local x,y,c,n = self:moveWithCollisions(self.x + self.dx, self.y + self.dy)
+	end
 
-    self:setCollideRect(0,0,self:getSize())
-    self.speed = speed
-    self:moveTo(x,y)
-    self:add()
+	function self:draw()
+		gfx.setColor(gfx.kColorBlack)
+		gfx.fillRect(0, 0, 30, 30)
+	end
+	
+	function self:collisionResponse(other)
+		return "overlap"
+	end
 
-    --self.setRotation(0)
-end
-
-function Bullet:update()
-    self:moveWithCollisions(self.x + self.speed, self.y)
+	return self
 end

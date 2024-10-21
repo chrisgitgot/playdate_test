@@ -6,6 +6,8 @@ import "CoreLibs/timer"
 
 import "player"
 import "bullet"
+import "spawn"
+
 
 -- create master variables
 local pd <const> = playdate
@@ -14,7 +16,8 @@ local sw, sh <const> = pd.display.getSize()
 local mx, my <const> = (sw/2), (sh/2)
 local snd <const> = pd.sound
 
-Player(mx,my,5)
+Player(mx,my)
+Spawn(mx,my-25)
 
 -- first function to run
 local function loadGame()

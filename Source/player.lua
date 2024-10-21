@@ -1,27 +1,37 @@
+import 'CoreLibs/sprites'
+
 local pd <const> = playdate
 local gfx <const> = pd.graphics
+bulletspeed = 5
 
 class('Player').extends(gfx.sprite)
 
-function Player:init(x,y,rotationSpeed)
+function Player:init(x,y)
     local playerImage = gfx.image.new("images/pSprite")
     self:setImage(playerImage)
     self:moveTo(x,y)
     self:add()
-    rSpeed = rotationSpeed
+    self.dx = 0
+    self.dy = 0
+    self.angle = 0
+    bx = self.x + 10
+    by = self.y
 end
 
 function Player:update()
-    if pd.buttonIsPressed(pd.kButtonUp) then
-        --self:moveBy(0,-1)
-        self:setRotation((self:getRotation())+rSpeed)
-    elseif pd.buttonIsPressed(pd.kButtonDown) then
-        --self:moveBy(0,1)
-        self:setRotation((self:getRotation())+-rSpeed)
-    end 
-
-    if pd.buttonJustPressed(pd.kButtonA) then
-        pRotation = self.getRotation
-        Bullet(self.x,self.y,pRotation,5)
+    self:setRotation(pd.getCrankPosition() - 90)
+    self.angle = (pd.getCrankPosition() - 90)
+    local dx = self.dx + bulletspeed * math.cos(math.rad(self.angle))
+    local dy = self.dy + bulletspeed * math.sin(math.rad(self.angle))
+    if pd.buttonJustPressed(pd.kButtonB) then
+        local b = Bullet:new()
+		b:moveTo(spawnX, spawnY)
+		b:setVelocity(self.dx + bulletspeed * math.cos(math.rad(self.angle)), self.dy + bulletspeed * math.sin(math.rad(self.angle)))
+		b:addSprite()
     end
+end
+
+function UpdateSpawn(x,y)
+    spawnX = x
+    spawnY = y
 end
